@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Wayback Tools",
+  "version": "1.0",
+  "description": "A simple Chrome extension for ao3 copy",
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.fanfiction.net/*"],
+      "js": ["content.js"],
+      "css": [""]
+    }
+  ]
+}

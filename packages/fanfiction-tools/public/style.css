@@ -1,0 +1,36 @@
+/* 强制允许选中文字 */
+#storytextp {
+  position: relative;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+.ff-tools_highlight {
+  background-color: yellow;
+}
+/** 夜间模式下高亮文字颜色 */
+.xlight .ff-tools_highlight {
+  background-color: #d12e2e;
+}
+
+.ff-tools_download_epub_btn {
+  position: absolute;
+  top: 25px;
+  right: 10px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+  transition: all 0.2s ease;
+  z-index: 9999;
+}
+.ff-tools_download_epub_btn:hover {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);
+}
