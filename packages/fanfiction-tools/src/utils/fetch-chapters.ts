@@ -1,11 +1,11 @@
 export interface ChapterData {
-  title: string;
-  content: string;
+  title: string
+  content: string
 }
 
 interface StoryInfo {
-  storyId: string;
-  storySlug: string;
+  storyId: string
+  storySlug: string
 }
 
 /**
@@ -13,9 +13,9 @@ interface StoryInfo {
  * URL format: https://www.fanfiction.net/s/[story id]/[chapter index]/[story title]
  */
 export function parseStoryUrl(url: string): StoryInfo | null {
-  const match = url.match(/\/s\/(\d+)\/\d+\/([^/?#]+)/);
-  if (!match) return null;
-  return { storyId: match[1], storySlug: match[2] };
+  const match = url.match(/\/s\/(\d+)\/\d+\/([^/?#]+)/)
+  if (!match) return null
+  return { storyId: match[1], storySlug: match[2] }
 }
 
 /**
@@ -23,11 +23,9 @@ export function parseStoryUrl(url: string): StoryInfo | null {
  * Returns 1 if no dropdown exists (single-chapter story).
  */
 export function getChapterCount(): number {
-  const select = document.querySelector(
-    '#chap_select'
-  ) as HTMLSelectElement | null;
-  if (!select) return 1;
-  return select.options.length;
+  const select = document.querySelector('#chap_select') as HTMLSelectElement | null
+  if (!select) return 1
+  return select.options.length
 }
 
 /**
@@ -35,13 +33,9 @@ export function getChapterCount(): number {
  * Falls back to "Chapter N" if dropdown is unavailable.
  */
 export function getChapterTitles(): string[] {
-  const select = document.querySelector(
-    '#chap_select'
-  ) as HTMLSelectElement | null;
-  if (!select) return ['Chapter 1'];
-  return Array.from(select.options).map(
-    (opt) => opt.textContent?.trim() || `Chapter ${opt.value}`
-  );
+  const select = document.querySelector('#chap_select') as HTMLSelectElement | null
+  if (!select) return ['Chapter 1']
+  return Array.from(select.options).map((opt) => opt.textContent?.trim() || `Chapter ${opt.value}`)
 }
 
 /**
@@ -49,17 +43,17 @@ export function getChapterTitles(): string[] {
  * Uses DOMParser to extract the #storytext element.
  */
 async function fetchChapterContent(url: string): Promise<string> {
-  const response = await fetch(url);
+  const response = await fetch(url)
   if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status}`);
+    throw new Error(`Failed to fetch ${url}: ${response.status}`)
   }
-  const html = await response.text();
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  const storytext = doc.querySelector('#storytext');
+  const html = await response.text()
+  const doc = new DOMParser().parseFromString(html, 'text/html')
+  const storytext = doc.querySelector('#storytext')
   if (!storytext) {
-    throw new Error(`No #storytext found at ${url}`);
+    throw new Error(`No #storytext found at ${url}`)
   }
-  return storytext.innerHTML;
+  return storytext.innerHTML
 }
 
 /**
@@ -79,21 +73,21 @@ export async function fetchAllChapters(
   onProgress?: (current: number, total: number) => void,
   delayMs = 1000
 ): Promise<ChapterData[]> {
-  const chapters: ChapterData[] = [];
+  const chapters: ChapterData[] = []
 
   for (let i = 1; i <= chapterCount; i++) {
-    if (onProgress) onProgress(i, chapterCount);
+    if (onProgress) onProgress(i, chapterCount)
 
-    const url = `https://www.fanfiction.net/s/${storyId}/${i}/${storySlug}`;
-    const content = await fetchChapterContent(url);
-    const title = chapterTitles[i - 1] || `Chapter ${i}`;
-    chapters.push({ title, content });
+    const url = `https://www.fanfiction.net/s/${storyId}/${i}/${storySlug}`
+    const content = await fetchChapterContent(url)
+    const title = chapterTitles[i - 1] || `Chapter ${i}`
+    chapters.push({ title, content })
 
     // Delay between requests (skip delay after the last chapter)
     if (i < chapterCount) {
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
+      await new Promise((resolve) => setTimeout(resolve, delayMs))
     }
   }
 
-  return chapters;
+  return chapters
 }

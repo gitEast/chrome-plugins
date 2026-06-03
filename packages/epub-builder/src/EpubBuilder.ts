@@ -1,36 +1,36 @@
-import JSZip from 'jszip';
-import { EpubBook } from './EpubBook';
-import { EpubBuildOptions } from './types';
-import { OpfGenerator } from './opf-generator';
-import { NcxGenerator } from './ncx-generator';
-import { ContainerGenerator } from './container-generator';
-import { convertHtmlToXhtml } from './html-converter';
+import JSZip from 'jszip'
+import { EpubBook } from './EpubBook'
+import { EpubBuildOptions } from './types'
+import { OpfGenerator } from './opf-generator'
+import { NcxGenerator } from './ncx-generator'
+import { ContainerGenerator } from './container-generator'
+import { convertHtmlToXhtml } from './html-converter'
 
 /**
  * EPUB 构建器
  * 负责将 EpubBook 实例打包成标准的 EPUB 文件（Blob）
  */
 export class EpubBuilder {
-  private book: EpubBook;
-  private options: Required<EpubBuildOptions>;
-  private zip: JSZip;
+  private book: EpubBook
+  private options: Required<EpubBuildOptions>
+  private zip: JSZip
 
-  private opfGenerator: OpfGenerator;
-  private ncxGenerator: NcxGenerator;
-  private containerGenerator: ContainerGenerator;
+  private opfGenerator: OpfGenerator
+  private ncxGenerator: NcxGenerator
+  private containerGenerator: ContainerGenerator
 
   constructor(book: EpubBook, options: EpubBuildOptions = {}) {
-    this.book = book;
+    this.book = book
     this.options = {
       css: options.css || this.getDefaultCss(),
       includeNavPage: options.includeNavPage ?? true,
-    };
+    }
 
-    this.zip = new JSZip();
+    this.zip = new JSZip()
 
-    this.opfGenerator = new OpfGenerator();
-    this.ncxGenerator = new NcxGenerator();
-    this.containerGenerator = new ContainerGenerator();
+    this.opfGenerator = new OpfGenerator()
+    this.ncxGenerator = new NcxGenerator()
+    this.containerGenerator = new ContainerGenerator()
   }
 
   /**
@@ -39,25 +39,25 @@ export class EpubBuilder {
    */
   async build(): Promise<Blob> {
     // 1. 添加 mimetype（必须是第一个文件，且不压缩）
-    this.addMimetype();
+    this.addMimetype()
 
     // 2. 添加 container.xml
-    this.addContainer();
+    this.addContainer()
 
     // 3. 添加 CSS 样式表
-    this.addStylesheet();
+    this.addStylesheet()
 
     // 4. 添加章节文件
-    await this.addChapters();
+    await this.addChapters()
 
     // 5. 添加 NCX 导航文件
-    this.addNcx();
+    this.addNcx()
 
     // 6. 添加 OPF 包文件
-    this.addOpf();
+    this.addOpf()
 
     // 7. 生成 ZIP（EPUB 本质是 ZIP）
-    return this.generateZip();
+    return this.generateZip()
   }
 
   /**
@@ -67,15 +67,15 @@ export class EpubBuilder {
   private addMimetype(): void {
     this.zip.file('mimetype', 'application/epub+zip', {
       compression: 'STORE', // 不压缩
-    });
+    })
   }
 
   /**
    * 添加 container.xml 文件
    */
   private addContainer(): void {
-    const containerXml = this.containerGenerator.generate('OEBPS/content.opf');
-    this.zip.file('META-INF/container.xml', containerXml);
+    const containerXml = this.containerGenerator.generate('OEBPS/content.opf')
+    this.zip.file('META-INF/container.xml', containerXml)
   }
 
   /**
@@ -83,7 +83,7 @@ export class EpubBuilder {
    */
   private addStylesheet(): void {
     if (this.options.css) {
-      this.zip.file('OEBPS/style.css', this.options.css);
+      this.zip.file('OEBPS/style.css', this.options.css)
     }
   }
 
@@ -91,19 +91,17 @@ export class EpubBuilder {
    * 添加所有章节文件
    */
   private async addChapters(): Promise<void> {
-    const chapters = this.book.getChapters();
+    const chapters = this.book.getChapters()
 
     for (const chapter of chapters) {
       // 转换 HTML 为 XHTML
-      const xhtmlContent = convertHtmlToXhtml(chapter.content);
+      const xhtmlContent = convertHtmlToXhtml(chapter.content)
 
       // 生成完整的 XHTML 文档
-      const fullXhtml = chapter.toXHTML(
-        this.options.css ? 'style.css' : undefined
-      );
+      const fullXhtml = chapter.toXHTML(this.options.css ? 'style.css' : undefined)
 
       // 添加到 ZIP
-      this.zip.file(`OEBPS/${chapter.filename}`, fullXhtml);
+      this.zip.file(`OEBPS/${chapter.filename}`, fullXhtml)
     }
   }
 
@@ -111,32 +109,27 @@ export class EpubBuilder {
    * 添加 NCX 导航文件
    */
   private addNcx(): void {
-    const chapters = this.book.getChapters();
+    const chapters = this.book.getChapters()
     const ncxContent = this.ncxGenerator.generate(
       this.book.metadata.title,
       this.book.metadata.identifier,
       chapters
-    );
+    )
 
-    this.zip.file('OEBPS/toc.ncx', ncxContent);
+    this.zip.file('OEBPS/toc.ncx', ncxContent)
   }
 
   /**
    * 添加 OPF 包文件
    */
   private addOpf(): void {
-    const chapters = this.book.getChapters();
-    const hasCss = !!this.options.css;
-    const hasNavPage = this.options.includeNavPage;
+    const chapters = this.book.getChapters()
+    const hasCss = !!this.options.css
+    const hasNavPage = this.options.includeNavPage
 
-    const opfContent = this.opfGenerator.generate(
-      this.book.metadata,
-      chapters,
-      hasCss,
-      hasNavPage
-    );
+    const opfContent = this.opfGenerator.generate(this.book.metadata, chapters, hasCss, hasNavPage)
 
-    this.zip.file('OEBPS/content.opf', opfContent);
+    this.zip.file('OEBPS/content.opf', opfContent)
   }
 
   /**
@@ -150,7 +143,7 @@ export class EpubBuilder {
       compressionOptions: {
         level: 9, // 最高压缩级别
       },
-    });
+    })
   }
 
   /**
@@ -262,6 +255,6 @@ hr {
     break-before: always;
   }
 }
-`;
+`
   }
 }

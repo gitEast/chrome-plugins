@@ -1,2 +1,2 @@
-export { handleRange } from './range';
-export { injectDownloadButton } from './download-button';
+export { handleRange } from './range'
+export { injectDownloadButton } from './download-button'

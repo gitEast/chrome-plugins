@@ -29,36 +29,36 @@ pnpm add epub-builder
 ### 基本使用
 
 ```typescript
-import { EpubBook, EpubBuilder } from 'epub-builder';
+import { EpubBook, EpubBuilder } from 'epub-builder'
 
 // 1. 创建书籍
 const book = new EpubBook({
   title: '我的小说',
   author: '作者名',
-  language: 'zh'
-});
+  language: 'zh',
+})
 
 // 2. 添加章节
 book.addChapter({
   title: '第一章',
-  content: '<p>这是第一章的内容...</p>'
-});
+  content: '<p>这是第一章的内容...</p>',
+})
 
 book.addChapter({
   title: '第二章',
-  content: '<p>这是第二章的内容...</p>'
-});
+  content: '<p>这是第二章的内容...</p>',
+})
 
 // 3. 构建 EPUB
-const builder = new EpubBuilder(book);
-const blob = await builder.build();
+const builder = new EpubBuilder(book)
+const blob = await builder.build()
 
 // 4. 下载文件
-const url = URL.createObjectURL(blob);
-const a = document.createElement('a');
-a.href = url;
-a.download = '我的小说.epub';
-a.click();
+const url = URL.createObjectURL(blob)
+const a = document.createElement('a')
+a.href = url
+a.download = '我的小说.epub'
+a.click()
 ```
 
 ## 📚 API 文档
@@ -135,11 +135,11 @@ p {
   text-indent: 2em;
   margin: 1em 0;
 }
-`;
+`
 
 const builder = new EpubBuilder(book, {
-  css: customCss
-});
+  css: customCss,
+})
 ```
 
 ## 📝 HTML 内容处理
@@ -161,40 +161,40 @@ const chapters = [
   { title: '第1章', content: '<p>内容...</p>' },
   { title: '第2章', content: '<p>内容...</p>' },
   { title: '第3章', content: '<p>内容...</p>' },
-];
+]
 
-book.addChapters(chapters);
+book.addChapters(chapters)
 ```
 
 ### 在 Chrome 扩展中使用
 
 ```typescript
 // 从网页抓取内容
-const novelTitle = document.querySelector('h1')?.textContent || '未知标题';
-const authorName = document.querySelector('.author')?.textContent || '未知作者';
-const chapterElements = document.querySelectorAll('.chapter');
+const novelTitle = document.querySelector('h1')?.textContent || '未知标题'
+const authorName = document.querySelector('.author')?.textContent || '未知作者'
+const chapterElements = document.querySelectorAll('.chapter')
 
 const chapters = Array.from(chapterElements).map((el, index) => ({
   title: el.querySelector('h2')?.textContent || `第${index + 1}章`,
   content: el.querySelector('.content')?.innerHTML || '',
-}));
+}))
 
 const book = new EpubBook({
   title: novelTitle,
   author: authorName,
   language: 'zh',
-});
+})
 
-book.addChapters(chapters);
+book.addChapters(chapters)
 
-const builder = new EpubBuilder(book);
-const blob = await builder.build();
+const builder = new EpubBuilder(book)
+const blob = await builder.build()
 
 // 下载
 chrome.downloads.download({
   url: URL.createObjectURL(blob),
   filename: `${novelTitle}.epub`,
-});
+})
 ```
 
 ## 📦 依赖

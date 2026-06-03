@@ -1,4 +1,4 @@
-import { EpubChapter } from './EpubChapter';
+import { EpubChapter } from './EpubChapter'
 
 /**
  * NCX 导航文件生成器
@@ -8,18 +8,14 @@ export class NcxGenerator {
   /**
    * 生成 toc.ncx 内容
    */
-  generate(
-    title: string,
-    identifier: string,
-    chapters: EpubChapter[]
-  ): string {
+  generate(title: string, identifier: string, chapters: EpubChapter[]): string {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN" "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
 <ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
 ${this.generateHead(identifier)}
 ${this.generateDocTitle(title)}
 ${this.generateNavMap(chapters)}
-</ncx>`;
+</ncx>`
   }
 
   /**
@@ -31,7 +27,7 @@ ${this.generateNavMap(chapters)}
     <meta name="dtb:depth" content="1"/>
     <meta name="dtb:totalPageCount" content="0"/>
     <meta name="dtb:maxPageNumber" content="0"/>
-  </head>`;
+  </head>`
   }
 
   /**
@@ -40,22 +36,22 @@ ${this.generateNavMap(chapters)}
   private generateDocTitle(title: string): string {
     return `  <docTitle>
     <text>${this.escapeXml(title)}</text>
-  </docTitle>`;
+  </docTitle>`
   }
 
   /**
    * 生成导航地图
    */
   private generateNavMap(chapters: EpubChapter[]): string {
-    let xml = `  <navMap>`;
+    let xml = `  <navMap>`
 
     chapters.forEach((chapter, index) => {
-      xml += `\n${this.generateNavPoint(chapter, index + 1)}`;
-    });
+      xml += `\n${this.generateNavPoint(chapter, index + 1)}`
+    })
 
-    xml += `\n  </navMap>`;
+    xml += `\n  </navMap>`
 
-    return xml;
+    return xml
   }
 
   /**
@@ -67,7 +63,7 @@ ${this.generateNavMap(chapters)}
         <text>${this.escapeXml(chapter.title)}</text>
       </navLabel>
       <content src="${chapter.filename}"/>
-    </navPoint>`;
+    </navPoint>`
   }
 
   /**
@@ -79,6 +75,6 @@ ${this.generateNavMap(chapters)}
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
-      .replace(/'/g, '&apos;');
+      .replace(/'/g, '&apos;')
   }
 }

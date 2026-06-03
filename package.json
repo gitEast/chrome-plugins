@@ -9,13 +9,16 @@
     "zip:fanfiction": "pnpm --filter fanfiction-tools zip",
     "dev:wayback": "pnpm --filter wayback-tools dev",
     "build:wayback": "pnpm --filter wayback-tools build",
+    "build:epub": "pnpm --filter epub-builder build",
     "zip:wayback": "pnpm --filter wayback-tools zip",
     "dev:all": "pnpm -r --parallel dev",
     "build:all": "pnpm -r build",
-    "zip:all": "pnpm -r zip"
+    "zip:all": "pnpm -r zip",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\""
   },
   "devDependencies": {
     "typescript": "^6.0.3",
-    "vite": "^6.0.0"
+    "vite": "^6.0.0",
+    "prettier": "^3.8.0"
   }
 }

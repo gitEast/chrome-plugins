@@ -3,7 +3,7 @@
  * 展示如何使用 EPUB 工具生成电子书
  */
 
-import { EpubBook, EpubBuilder, EpubMetadata } from './index';
+import { EpubBook, EpubBuilder, EpubMetadata } from './index'
 
 /**
  * 示例 1: 基本使用
@@ -15,11 +15,11 @@ async function example1_basicUsage() {
     author: '张三',
     language: 'zh',
     description: '这是一个示例小说的 EPUB 文件',
-    subjects: ['小说', '示例']
-  };
+    subjects: ['小说', '示例'],
+  }
 
   // 2. 创建书籍实例
-  const book = new EpubBook(metadata);
+  const book = new EpubBook(metadata)
 
   // 3. 添加章节
   book.addChapter({
@@ -28,8 +28,8 @@ async function example1_basicUsage() {
       <p>这是第一章的内容。这是一个示例段落。</p>
       <p>这是第二个段落，展示了如何使用 HTML 格式的内容。</p>
       <blockquote>这是一个引用示例</blockquote>
-    `
-  });
+    `,
+  })
 
   book.addChapter({
     title: '第二章 发展',
@@ -41,20 +41,20 @@ async function example1_basicUsage() {
         <li>列表项 2</li>
         <li>列表项 3</li>
       </ul>
-    `
-  });
+    `,
+  })
 
   book.addChapter({
     title: '第三章 结局',
-    content: '<p>这是第三章，也是最后一章。</p>'
-  });
+    content: '<p>这是第三章，也是最后一章。</p>',
+  })
 
   // 4. 构建 EPUB
-  const builder = new EpubBuilder(book);
-  const blob = await builder.build();
+  const builder = new EpubBuilder(book)
+  const blob = await builder.build()
 
   // 5. 下载文件
-  downloadEpub(blob, '示例小说.epub');
+  downloadEpub(blob, '示例小说.epub')
 }
 
 /**
@@ -64,8 +64,8 @@ async function example2_batchChapters() {
   const book = new EpubBook({
     title: '网页小说合集',
     author: '多个作者',
-    language: 'zh'
-  });
+    language: 'zh',
+  })
 
   // 模拟从网页抓取的小说章节
   const chaptersData = [
@@ -73,16 +73,16 @@ async function example2_batchChapters() {
     { title: '第2章', content: '<p>第二章内容...</p>' },
     { title: '第3章', content: '<p>第三章内容...</p>' },
     { title: '第4章', content: '<p>第四章内容...</p>' },
-    { title: '第5章', content: '<p>第五章内容...</p>' }
-  ];
+    { title: '第5章', content: '<p>第五章内容...</p>' },
+  ]
 
   // 批量添加
-  book.addChapters(chaptersData);
+  book.addChapters(chaptersData)
 
   // 构建并下载
-  const builder = new EpubBuilder(book);
-  const blob = await builder.build();
-  downloadEpub(blob, '网页小说合集.epub');
+  const builder = new EpubBuilder(book)
+  const blob = await builder.build()
+  downloadEpub(blob, '网页小说合集.epub')
 }
 
 /**
@@ -92,13 +92,13 @@ async function example3_customCss() {
   const book = new EpubBook({
     title: '自定义样式小说',
     author: '李四',
-    language: 'zh'
-  });
+    language: 'zh',
+  })
 
   book.addChapter({
     title: '第一章',
-    content: '<p>这是一段带有自定义样式的文本。</p>'
-  });
+    content: '<p>这是一段带有自定义样式的文本。</p>',
+  })
 
   // 自定义 CSS
   const customCss = `
@@ -125,14 +125,14 @@ p {
 a {
   color: #1976d2;
 }
-`;
+`
 
   const builder = new EpubBuilder(book, {
-    css: customCss
-  });
+    css: customCss,
+  })
 
-  const blob = await builder.build();
-  downloadEpub(blob, '自定义样式小说.epub');
+  const blob = await builder.build()
+  downloadEpub(blob, '自定义样式小说.epub')
 }
 
 /**
@@ -140,36 +140,35 @@ a {
  */
 async function example4_chromeExtension() {
   // 假设这是从网页抓取的小说内容
-  const novelTitle = document.querySelector('h1')?.textContent || '未知标题';
-  const authorName =
-    document.querySelector('.author')?.textContent || '未知作者';
+  const novelTitle = document.querySelector('h1')?.textContent || '未知标题'
+  const authorName = document.querySelector('.author')?.textContent || '未知作者'
 
   // 抓取所有章节
-  const chapterElements = document.querySelectorAll('.chapter');
+  const chapterElements = document.querySelectorAll('.chapter')
   const chapters = Array.from(chapterElements).map((el, index) => ({
     title: el.querySelector('h2')?.textContent || `第${index + 1}章`,
-    content: el.querySelector('.content')?.innerHTML || ''
-  }));
+    content: el.querySelector('.content')?.innerHTML || '',
+  }))
 
   // 创建书籍
   const book = new EpubBook({
     title: novelTitle,
     author: authorName,
-    language: 'zh'
-  });
+    language: 'zh',
+  })
 
-  book.addChapters(chapters);
+  book.addChapters(chapters)
 
   // 构建 EPUB
-  const builder = new EpubBuilder(book);
-  const blob = await builder.build();
+  const builder = new EpubBuilder(book)
+  const blob = await builder.build()
 
   // 使用 Chrome 下载 API
   // @ts-ignore - Chrome 扩展 API
   chrome.downloads.download({
     url: URL.createObjectURL(blob),
-    filename: `${novelTitle}.epub`
-  });
+    filename: `${novelTitle}.epub`,
+  })
 }
 
 /**
@@ -192,36 +191,36 @@ async function example5_fullHtmlDocument() {
   <p>只保留 body 中的内容。</p>
 </body>
 </html>
-`;
+`
 
   const book = new EpubBook({
     title: '从完整文档生成',
     author: '王五',
-    language: 'zh'
-  });
+    language: 'zh',
+  })
 
   book.addChapter({
     title: '第一章',
-    content: fullHtmlDocument // 即使传入完整文档，转换器也会正确处理
-  });
+    content: fullHtmlDocument, // 即使传入完整文档，转换器也会正确处理
+  })
 
-  const builder = new EpubBuilder(book);
-  const blob = await builder.build();
-  downloadEpub(blob, '完整文档.epub');
+  const builder = new EpubBuilder(book)
+  const blob = await builder.build()
+  downloadEpub(blob, '完整文档.epub')
 }
 
 /**
  * 辅助函数：下载 EPUB 文件
  */
 function downloadEpub(blob: Blob, filename: string) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
 }
 
 // 导出示例函数（可根据需要调用）
@@ -230,5 +229,5 @@ export {
   example2_batchChapters,
   example3_customCss,
   example4_chromeExtension,
-  example5_fullHtmlDocument
-};
+  example5_fullHtmlDocument,
+}

@@ -1,4 +1,4 @@
-import { defineConfig } from 'wxt';
+import { defineConfig } from 'wxt'
 
 export default defineConfig({
   srcDir: 'src',
@@ -8,6 +8,6 @@ export default defineConfig({
     name: 'FanFiction Tools',
     version: '1.0',
     description: 'A simple Chrome extension for FanFiction.net',
-    permissions: ['activeTab']
-  }
-});
+    permissions: ['activeTab'],
+  },
+})

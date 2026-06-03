@@ -1,17 +1,17 @@
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
+import JSZip from 'jszip'
+import { saveAs } from 'file-saver'
 
 interface IBookMetadata {
-  title: string;
-  author: string;
+  title: string
+  author: string
 }
 interface IChapter {
-  title: string;
-  content: string;
+  title: string
+  content: string
 }
 interface IBook {
-  metadata: IBookMetadata;
-  chapters: IChapter[];
+  metadata: IBookMetadata
+  chapters: IChapter[]
 }
 
 function escapeXml(str: string): string {
@@ -19,19 +19,19 @@ function escapeXml(str: string): string {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/"/g, '&quot;')
 }
 
 export const createEpub = async (book: IBook) => {
-  const zip = new JSZip();
+  const zip = new JSZip()
 
   // 1. mimetype must be first entry, uncompressed
-  zip.file('mimetype', 'application/epub+zip', { compression: 'STORE' });
+  zip.file('mimetype', 'application/epub+zip', { compression: 'STORE' })
 
   // 2. META-INF/container.xml
-  const metaInf = zip.folder('META-INF');
+  const metaInf = zip.folder('META-INF')
   if (!metaInf) {
-    throw new Error('Failed to create META-INF folder');
+    throw new Error('Failed to create META-INF folder')
   }
   metaInf.file(
     'container.xml',
@@ -43,12 +43,12 @@ export const createEpub = async (book: IBook) => {
         </rootfiles>
       </container>
     `
-  );
+  )
 
   // 3. OEBPS folder
-  const oebps = zip.folder('OEBPS');
+  const oebps = zip.folder('OEBPS')
   if (!oebps) {
-    throw new Error('Failed to create OEBPS folder');
+    throw new Error('Failed to create OEBPS folder')
   }
 
   // 4. Chapter XHTML files
@@ -66,8 +66,8 @@ export const createEpub = async (book: IBook) => {
         ${ch.content}
       </body>
       </html>`
-    );
-  });
+    )
+  })
 
   // 5. content.opf (package document)
   const manifestItems = book.chapters
@@ -75,10 +75,8 @@ export const createEpub = async (book: IBook) => {
       (_, i) =>
         `    <item id="chapter_${i}" href="chapter_${i}.xhtml" media-type="application/xhtml+xml"/>`
     )
-    .join('\n');
-  const spineItems = book.chapters
-    .map((_, i) => `    <itemref idref="chapter_${i}"/>`)
-    .join('\n');
+    .join('\n')
+  const spineItems = book.chapters.map((_, i) => `    <itemref idref="chapter_${i}"/>`).join('\n')
 
   oebps.file(
     'content.opf',
@@ -96,7 +94,7 @@ export const createEpub = async (book: IBook) => {
       </manifest>
       <spine toc="ncx">${spineItems}</spine>
     </package>`
-  );
+  )
 
   // 6. toc.ncx (table of contents)
   const navPoints = book.chapters
@@ -107,7 +105,7 @@ export const createEpub = async (book: IBook) => {
       <content src="chapter_${i}.xhtml"/>
     </navPoint>`
     )
-    .join('\n');
+    .join('\n')
 
   oebps.file(
     'toc.ncx',
@@ -123,12 +121,12 @@ export const createEpub = async (book: IBook) => {
         </navMap>
       </ncx>
     `
-  );
+  )
 
   // 7. Generate and download
   const content = await zip.generateAsync({
     type: 'blob',
-    mimeType: 'application/epub+zip'
-  });
-  saveAs(content, `${book.metadata.title}.epub`);
-};
+    mimeType: 'application/epub+zip',
+  })
+  saveAs(content, `${book.metadata.title}.epub`)
+}

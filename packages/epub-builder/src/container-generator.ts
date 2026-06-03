@@ -13,6 +13,6 @@ export class ContainerGenerator {
   <rootfiles>
     <rootfile full-path="${opfPath}" media-type="application/oebps-package+xml"/>
   </rootfiles>
-</container>`;
+</container>`
   }
 }

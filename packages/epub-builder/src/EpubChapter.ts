@@ -1,22 +1,22 @@
-import { Chapter, ChapterOptions } from './types';
+import { Chapter, ChapterOptions } from './types'
 
 /**
  * EPUB 章节类
  * 表示电子书中的一个章节
  */
 export class EpubChapter implements Chapter {
-  readonly id: string;
-  readonly title: string;
-  readonly content: string;
-  readonly filename: string;
-  readonly index: number;
+  readonly id: string
+  readonly title: string
+  readonly content: string
+  readonly filename: string
+  readonly index: number
 
   constructor(options: ChapterOptions, index: number) {
-    this.index = index;
-    this.id = options.id || `chapter_${String(index).padStart(3, '0')}`;
-    this.title = options.title;
-    this.content = options.content;
-    this.filename = `${this.id}.xhtml`;
+    this.index = index
+    this.id = options.id || `chapter_${String(index).padStart(3, '0')}`
+    this.title = options.title
+    this.content = options.content
+    this.filename = `${this.id}.xhtml`
   }
 
   /**
@@ -25,7 +25,7 @@ export class EpubChapter implements Chapter {
   toXHTML(cssFilename?: string): string {
     const cssLink = cssFilename
       ? `  <link rel="stylesheet" type="text/css" href="${cssFilename}"/>`
-      : '';
+      : ''
 
     return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
@@ -39,7 +39,7 @@ ${cssLink}
   <h1>${this.escapeXml(this.title)}</h1>
 ${this.processContent()}
 </body>
-</html>`;
+</html>`
   }
 
   /**
@@ -47,25 +47,25 @@ ${this.processContent()}
    */
   private processContent(): string {
     // 清理和转换 HTML 内容
-    let content = this.content;
+    let content = this.content
 
     // 移除可能的 HTML 文档结构（如果用户传入了完整文档）
-    content = content.replace(/<!DOCTYPE[^>]*>/gi, '');
-    content = content.replace(/<html[^>]*>/gi, '');
-    content = content.replace(/<\/html>/gi, '');
-    content = content.replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '');
-    content = content.replace(/<body[^>]*>/gi, '');
-    content = content.replace(/<\/body>/gi, '');
+    content = content.replace(/<!DOCTYPE[^>]*>/gi, '')
+    content = content.replace(/<html[^>]*>/gi, '')
+    content = content.replace(/<\/html>/gi, '')
+    content = content.replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '')
+    content = content.replace(/<body[^>]*>/gi, '')
+    content = content.replace(/<\/body>/gi, '')
 
     // 清理多余的空白行
-    content = content.replace(/\n{3,}/g, '\n\n');
+    content = content.replace(/\n{3,}/g, '\n\n')
 
     // 转义特殊字符（保留 HTML 标签）
     // 注意：这里只转义文本内容中的特殊字符，不转义标签
     // 由于内容可能是复杂的 HTML，我们不做过度处理
     // 假设用户输入的是合法的 HTML/XHTML
 
-    return `  ${content.trim()}`;
+    return `  ${content.trim()}`
   }
 
   /**
@@ -77,6 +77,6 @@ ${this.processContent()}
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
-      .replace(/'/g, '&apos;');
+      .replace(/'/g, '&apos;')
   }
 }
