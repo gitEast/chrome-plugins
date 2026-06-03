@@ -6,10 +6,13 @@
   "scripts": {
     "dev:fanfiction": "pnpm --filter fanfiction-tools dev",
     "build:fanfiction": "pnpm --filter fanfiction-tools build",
+    "zip:fanfiction": "pnpm --filter fanfiction-tools zip",
     "dev:wayback": "pnpm --filter wayback-tools dev",
     "build:wayback": "pnpm --filter wayback-tools build",
+    "zip:wayback": "pnpm --filter wayback-tools zip",
     "dev:all": "pnpm -r --parallel dev",
-    "build:all": "pnpm -r build"
+    "build:all": "pnpm -r build",
+    "zip:all": "pnpm -r zip"
   },
   "devDependencies": {
     "typescript": "^6.0.3",

@@ -1,0 +1,25 @@
+{
+  "name": "epub-builder",
+  "version": "1.0.0",
+  "description": "EPUB 电子书生成库，从 HTML 内容生成符合 EPUB 3.0 规范的电子书",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  },
+  "keywords": [
+    "epub",
+    "ebook",
+    "epub-builder",
+    "html-to-epub"
+  ],
+  "license": "MIT"
+}

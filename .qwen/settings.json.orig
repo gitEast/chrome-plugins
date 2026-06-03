@@ -6,7 +6,12 @@
       "Bash(xcopy *)",
       "Bash(rmdir *)",
       "Bash(pnpm install)",
-      "Bash(pnpm *)"
+      "Bash(pnpm *)",
+      "Bash(del *)",
+      "Bash(npx *)",
+      "Bash(dir *)",
+      "Bash(type *)",
+      "Bash(timeout *)"
     ]
   },
   "$version": 4
